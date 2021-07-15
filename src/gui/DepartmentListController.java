@@ -132,7 +132,8 @@ public class DepartmentListController implements Initializable, DataChangeListen
 	private void initEditButtons() {
 		tableClomunEdit.setCellValueFactory(param -> new ReadOnlyObjectWrapper<>(param.getValue()));
 		tableClomunEdit.setCellFactory(param -> new TableCell<Department, Department>() {
-			private final Button button = new Button("edit");
+			private final Button button = new Button("Edit");
+		
 
 			@Override
 			protected void updateItem(Department obj, boolean empty) {
@@ -152,7 +153,7 @@ public class DepartmentListController implements Initializable, DataChangeListen
 	private void deleteButtons() {
 		tableClomunDelete.setCellValueFactory(param -> new ReadOnlyObjectWrapper<>(param.getValue()));
 		tableClomunDelete.setCellFactory(param -> new TableCell<Department, Department>() {
-			private final Button button = new Button("delete");
+			private final Button button = new Button("Remove");
 
 			@Override
 			protected void updateItem(Department obj, boolean empty) {
@@ -168,24 +169,22 @@ public class DepartmentListController implements Initializable, DataChangeListen
 
 	}
 
-
 	private void removeEntity(Department obj) {
-	Optional <ButtonType> result = Alerts.showConfirmation("Confirmation", "do you want to remove?");
-		
-	if(result.get() == ButtonType.OK) {
-		if(service == null) {
-			throw new IllegalStateException("Service was null");
-		}try {
-			service.removeDepartment(obj);
-			initializeDepartment();
+		Optional<ButtonType> result = Alerts.showConfirmation("Confirmation", "do you want to remove?");
+
+		if (result.get() == ButtonType.OK) {
+			if (service == null) {
+				throw new IllegalStateException("Service was null");
+			}
+			try {
+				service.removeDepartment(obj);
+				initializeDepartment();
+			} catch (DbException e) {
+				Alerts.showAlert("Error removing object", null, e.getMessage(), AlertType.ERROR);
+			}
+
 		}
-		catch(DbException e) {
-			Alerts.showAlert("Error removing object", null, e.getMessage(), AlertType.ERROR);
-		}
-		
-		
-	}
-		
+
 	}
 
 }
